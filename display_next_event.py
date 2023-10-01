@@ -35,7 +35,6 @@ def get_next_event(file_path):
 
 
 def draw_event_details(draw, event):
-    # Set the font
     font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 14)
 
     # Prepare event details
@@ -55,26 +54,28 @@ def display_next_event(event):
     epd = epd2in13_V3.EPD()
     epd.init()
 
-    # Clear the screen
+    # clear the screen
     epd.Clear(0xFF)
 
-    # Create the image buffer
+    # create the image buffer
     image = Image.new("1", (epd.height, epd.width), 255)
     draw = ImageDraw.Draw(image)
 
-    # Draw event details
     draw_event_details(draw, event)
 
-    # Display the image buffer
+    # display the image buffer
     epd.display(epd.getbuffer(image))
 
-    # Put the display to sleep
+    # put the display to sleep
     epd.sleep()
 
+def read_ics_link():
+    with open("ics_link.txt", "r") as f:
+        return f.readline().strip()
 
 if __name__ == "__main__":
-    # Make sure to replace this with the actual path to your .ics file
-    file_path = "/home/pi/calendardisplay/calendar.ics"
+    # !!!!! Be sure to open up ics_link_sample.txt and follow the instructions
+    file_path = read_ics_link()
 
     while True:
         next_event = get_next_event(file_path)

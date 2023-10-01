@@ -1,0 +1,6 @@
+https://outlook.office365.com/owa/calendar/??????????????????????????????????/calendar.ics
+
+# Steps:
+#
+# 1. Rename this file to ics_link.txt
+# 2. Replace the example link above to the actual link to your calendar.ics file.  You can find and share this by going to Outlook online, going to settings and sharing your calendar.
