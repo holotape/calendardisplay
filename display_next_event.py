@@ -117,19 +117,16 @@ if __name__ == "__main__":
         now = datetime.datetime.now().replace(tzinfo=None)
         
         # Check if it's the start of the hour
-        if now.minute == 0:
-            perform_full_update = True
-        else:
-            perform_full_update = False
-
+        perform_full_update = now.minute == 0
+        
         next_event = get_next_event(file_path)
 
         if next_event:
             display_next_event(next_event, full_update=perform_full_update)
 
-            # If the next event has started, calculate sleep duration 
-            # to be 10 minutes after the start of the event
-            if now > next_event["start"]:
+            # If the next event has started and we're less than 10 minutes into it, 
+            # calculate sleep duration to be 10 minutes after the start of the event
+            if next_event["start"] <= now <= (next_event["start"] + datetime.timedelta(minutes=10)):
                 sleep_until = next_event["start"] + datetime.timedelta(minutes=10)
             else:  # Otherwise, just sleep until the start of the next event
                 sleep_until = next_event["start"]
