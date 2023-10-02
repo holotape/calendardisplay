@@ -81,11 +81,15 @@ FLIP_DISPLAY = True # Set this to False if you'd like to flip the display upside
 
 def display_next_event(event, full_update=False):
     epd = epd2in13_V3.EPD()
-    epd.init()
+    
 
     if full_update:
+        epd.init(epd.FULL_UPDATE)
         epd.Clear(0xFF)  # full clear for a full update
-
+    
+    else:
+        epd.init(epd.PART_UPDATE)
+    
     # create the image buffer
     image = Image.new("1", (epd.height, epd.width), 255)
     draw = ImageDraw.Draw(image)
@@ -106,11 +110,13 @@ def read_ics_link():
     with open("ics_link.txt", "r") as f:
         return f.readline().strip()
 
-MAX_SLEEP_DURATION = 60 # In seconds, 300 is probably a good number
+MAX_SLEEP_DURATION = 300 # In seconds, 300 is probably a good number
 
 if __name__ == "__main__":
     # !!!!! Be sure to open up ics_link_sample.txt and follow the instructions
     file_path = read_ics_link()
+
+    previous_event = None  # To keep track of the previously displayed event
 
     while True:
         print("Checking for next event")
@@ -122,6 +128,12 @@ if __name__ == "__main__":
         next_event = get_next_event(file_path)
 
         if next_event:
+            
+            # Check if the event has changed, if so, do a full update
+            if next_event != previous_event:
+                perform_full_update = True
+                previous_event = next_event
+
             display_next_event(next_event, full_update=perform_full_update)
 
             # If the next event has started and we're less than 10 minutes into it, 
