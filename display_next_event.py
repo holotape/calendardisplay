@@ -79,12 +79,14 @@ def draw_event_details(draw, event):
 
 FLIP_DISPLAY = True # Set this to False if you'd like to flip the display upside-down
 
-def display_next_event(event):
+def display_next_event(event, partial_update=True):
     epd = epd2in13_V3.EPD()
     epd.init()
 
-    # clear the screen
-    epd.Clear(0xFF)
+    if partial_update:
+        epd.init(epd.FAST_UPDATE)  # partial update
+    else:
+        epd.Clear(0xFF)  # full clear for a full update
 
     # create the image buffer
     image = Image.new("1", (epd.height, epd.width), 255)
