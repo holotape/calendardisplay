@@ -106,6 +106,8 @@ def read_ics_link():
     with open("ics_link.txt", "r") as f:
         return f.readline().strip()
 
+MAX_SLEEP_DURATION = 60 # In seconds, 300 is probably a good number
+
 if __name__ == "__main__":
     # !!!!! Be sure to open up ics_link_sample.txt and follow the instructions
     file_path = read_ics_link()
@@ -120,11 +122,11 @@ if __name__ == "__main__":
             # Calculate the time to sleep until 10 minutes after the start of the current event
             now = datetime.datetime.now().replace(tzinfo=None)
             sleep_until = next_event["start"] + datetime.timedelta(minutes=10)
-            sleep_duration = (sleep_until - now).total_seconds()
+            sleep_duration = min(MAX_SLEEP_DURATION, max(sleep_duration, 60))
 
             # Sleep for the calculated duration (if positive) or for 60 seconds (if negative)
-            print(f"Sleeping for {max(sleep_duration, 60)} seconds")
-            time.sleep(max(sleep_duration, 60))
+            print(f"Sleeping for {sleep_duration} seconds")
+            time.sleep(sleep_duration)
         else:
             print("No upcoming events found. Checking again in 60 seconds.")
             time.sleep(60)  # Sleep for 60 seconds before checking again
