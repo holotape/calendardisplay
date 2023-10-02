@@ -15,6 +15,7 @@ def get_next_event(file_path_or_url):
     
     # Check if the input is a URL or a local file path
     if file_path_or_url.startswith("http://") or file_path_or_url.startswith("https://"):
+        headers = {"Cache-Control": "no-cache"} # Don't cache the ICS file
         response = requests.get(file_path_or_url)
         response.raise_for_status()  # This will raise an exception if there was an error fetching the URL
         cal_content = response.content
