@@ -28,8 +28,17 @@ def get_next_event(file_path_or_url):
     min_diff = float("inf")
 
     for event in cal.walk("VEVENT"):
-        event_start = event.get("dtstart").dt.replace(tzinfo=None)
-        diff = (event_start - now).total_seconds()
+        event_start_dt = event.get("dtstart").dt
+        
+        if isinstance(event_start_dt, datetime.datetime):
+            event_start = event_start_dt.astimezone(local_tz).replace(tzinfo=None)
+        else:  # it's a date, not a datetime
+            event_start = event_start_dt
+        
+        if isinstance(event_start, datetime.datetime):  # handle both datetime and date types
+            diff = (event_start - now).total_seconds()
+        else:
+            diff = float('inf')  # Treat all-day events like they're infinitely far in the future
 
         if 0 <= diff < min_diff:
             min_diff = diff
