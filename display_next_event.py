@@ -111,6 +111,7 @@ if __name__ == "__main__":
     file_path = read_ics_link()
 
     while True:
+        print("Checking for next event")
         next_event = get_next_event(file_path)
 
         if next_event:
@@ -122,8 +123,9 @@ if __name__ == "__main__":
             sleep_duration = (sleep_until - now).total_seconds()
 
             # Sleep for the calculated duration (if positive) or for 60 seconds (if negative)
+            print(f"Sleeping for {max(sleep_duration, 60)} seconds")
             time.sleep(max(sleep_duration, 60))
         else:
-            print("No upcoming events found.")
+            print("No upcoming events found. Checking again in 60 seconds.")
             time.sleep(60)  # Sleep for 60 seconds before checking again
 
