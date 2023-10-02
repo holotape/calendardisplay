@@ -53,7 +53,7 @@ def get_next_event(file_path_or_url):
 
 
 def draw_event_details(draw, event):
-    font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 14)
+    font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 20)
 
     # Prepare event details
     summary = f"Event: {event['summary']}"
@@ -67,6 +67,7 @@ def draw_event_details(draw, event):
     draw.text((0, 40), end_time, font=font, fill=0)
     draw.text((0, 60), location, font=font, fill=0)
 
+FLIP_DISPLAY = False # Set this to True if you'd like to flip the display upside-down
 
 def display_next_event(event):
     epd = epd2in13_V3.EPD()
@@ -80,6 +81,10 @@ def display_next_event(event):
     draw = ImageDraw.Draw(image)
 
     draw_event_details(draw, event)
+
+    # Rotate the image if FLIP_DISPLAY is set to True
+    if FLIP_DISPLAY:
+        image = image.rotate(180)
 
     # display the image buffer
     epd.display(epd.getbuffer(image))
