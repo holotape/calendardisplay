@@ -79,13 +79,11 @@ def draw_event_details(draw, event):
 
 FLIP_DISPLAY = True # Set this to False if you'd like to flip the display upside-down
 
-def display_next_event(event, partial_update=True):
+def display_next_event(event, full_update=False):
     epd = epd2in13_V3.EPD()
     epd.init()
 
-    if partial_update:
-        epd.init(epd.FAST_UPDATE)  # partial update
-    else:
+    if full_update:
         epd.Clear(0xFF)  # full clear for a full update
 
     # create the image buffer
@@ -127,7 +125,7 @@ if __name__ == "__main__":
         next_event = get_next_event(file_path)
 
         if next_event:
-            display_next_event(next_event, partial_update=not perform_full_update)
+            display_next_event(next_event, full_update=perform_full_update)
 
             # If the next event has started, calculate sleep duration 
             # to be 10 minutes after the start of the event
