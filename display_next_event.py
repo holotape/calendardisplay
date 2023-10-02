@@ -114,17 +114,28 @@ if __name__ == "__main__":
 
     while True:
         print("Checking for next event")
+        now = datetime.datetime.now().replace(tzinfo=None)
+        
+        # Check if it's the start of the hour
+        if now.minute == 0:
+            perform_full_update = True
+        else:
+            perform_full_update = False
+
         next_event = get_next_event(file_path)
 
         if next_event:
-            display_next_event(next_event)
+            display_next_event(next_event, partial_update=not perform_full_update)
 
-            # Calculate the time to sleep until 10 minutes after the start of the current event
-            now = datetime.datetime.now().replace(tzinfo=None)
-            sleep_until = next_event["start"] + datetime.timedelta(minutes=10)
-            sleep_duration = (sleep_until - now).total_seconds()
+            # If the next event has started, calculate sleep duration 
+            # to be 10 minutes after the start of the event
+            if now > next_event["start"]:
+                sleep_until = next_event["start"] + datetime.timedelta(minutes=10)
+            else:  # Otherwise, just sleep until the start of the next event
+                sleep_until = next_event["start"]
             
-           
+            sleep_duration = (sleep_until - now).total_seconds()
+                       
         else:
             print("No upcoming events found. Checking again in 60 seconds.")
             sleep_duration = 60  # Sleep for 60 seconds before checking again
