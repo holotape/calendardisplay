@@ -77,7 +77,7 @@ def draw_event_details(draw, event):
     draw.text((0, 40), end_time, font=font, fill=0)
     draw.text((0, 60), location, font=font, fill=0)
 
-FLIP_DISPLAY = False # Set this to True if you'd like to flip the display upside-down
+FLIP_DISPLAY = True # Set this to False if you'd like to flip the display upside-down
 
 def display_next_event(event):
     epd = epd2in13_V3.EPD()
