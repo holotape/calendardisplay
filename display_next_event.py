@@ -53,7 +53,7 @@ def get_next_event(file_path_or_url):
 
 
 def draw_event_details(draw, event):
-    font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 20)
+    font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 18)
 
     # Prepare event details
     summary = f"Event: {event['summary']}"
