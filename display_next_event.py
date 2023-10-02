@@ -3,17 +3,26 @@ import time
 import os
 from icalendar import Calendar
 import pytz
+import requests
 
 from waveshare_epd import epd2in13_V3
 from PIL import Image, ImageDraw, ImageFont
 
 
-def get_next_event(file_path):
+def get_next_event(file_path_or_url):
     local_tz = pytz.timezone("America/Toronto")
     now = datetime.datetime.now(local_tz).replace(tzinfo=None)
+    
+    # Check if the input is a URL or a local file path
+    if file_path_or_url.startswith("http://") or file_path_or_url.startswith("https://"):
+        response = requests.get(file_path_or_url)
+        response.raise_for_status()  # This will raise an exception if there was an error fetching the URL
+        cal_content = response.content
+    else:
+        with open(file_path_or_url, "rb") as f:
+            cal_content = f.read()
 
-    with open(file_path, "rb") as f:
-        cal = Calendar.from_ical(f.read())
+    cal = Calendar.from_ical(cal_content)
 
     next_event = None
     min_diff = float("inf")
