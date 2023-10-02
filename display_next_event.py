@@ -122,12 +122,14 @@ if __name__ == "__main__":
             # Calculate the time to sleep until 10 minutes after the start of the current event
             now = datetime.datetime.now().replace(tzinfo=None)
             sleep_until = next_event["start"] + datetime.timedelta(minutes=10)
-            sleep_duration = min(MAX_SLEEP_DURATION, max(sleep_duration, 60))
-
-            # Sleep for the calculated duration (if positive) or for 60 seconds (if negative)
-            print(f"Sleeping for {sleep_duration} seconds")
-            time.sleep(sleep_duration)
+            sleep_duration = (sleep_until - now).total_seconds()
+            
+           
         else:
             print("No upcoming events found. Checking again in 60 seconds.")
-            time.sleep(60)  # Sleep for 60 seconds before checking again
+            sleep_duration = 60  # Sleep for 60 seconds before checking again
 
+        # Sleep for the calculated duration (if positive) or for 60 seconds (if negative)
+        sleep_duration = min(MAX_SLEEP_DURATION, max(sleep_duration, 60))
+        print(f"Sleeping for {sleep_duration} seconds")
+        time.sleep(sleep_duration)
