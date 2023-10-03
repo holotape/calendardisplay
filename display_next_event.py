@@ -75,7 +75,7 @@ def wrap_text(text, font, max_width):
 
 def draw_event_details(draw, event, max_width):
     # Put the path to you font of choice below
-    font = ImageFont.truetype("/usr/share/fonts/truetype/chicago/Chicago Normal.ttf", 18)
+    font = ImageFont.truetype("/usr/share/fonts/truetype/chicago/Chicago Normal.ttf", 20)
     summary_lines = wrap_text(event['summary'], font, max_width)
 
     # Prepare event details
