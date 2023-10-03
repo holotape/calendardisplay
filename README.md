@@ -8,11 +8,15 @@ https://www.waveshare.com/wiki/2.13inch_e-Paper_HAT_Manual
 Too long, don't want to read?
 Do this.
 
-```sudo raspi-config```
+```
+sudo raspi-config
+```
 
 Select Interfacing Options > SPI > Yes, enable SPI interface
 
-```sudo reboot```
+```
+sudo reboot
+```
 
 ```
 sudo apt-get update
@@ -25,11 +29,15 @@ sudo pip3 install spidev
 
 Clone the Waveshare demo project which can build the waveshare_epd module
 
-```git clone https://github.com/waveshare/e-Paper.git```
+```
+git clone https://github.com/waveshare/e-Paper.git
+```
 
 Install the waveshare_epd module and other dependencies
 
-```python3 e-Paper/RaspberryPi_JetsonNano/python/setup.py install```
+```
+python3 e-Paper/RaspberryPi_JetsonNano/python/setup.py install
+```
 
 # Important Bits
 
