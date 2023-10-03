@@ -81,10 +81,9 @@ FLIP_DISPLAY = True # Set this to False if you'd like to flip the display upside
 
 def display_next_event(event, full_update=False):
     epd = epd2in13_V3.EPD()
-    
+    epd.init()
 
     if full_update:
-        epd.init(epd.FULL_UPDATE)
         epd.Clear(0xFF)  # full clear for a full update
     
     else:
