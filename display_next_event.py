@@ -61,23 +61,41 @@ def get_next_event(file_path_or_url):
 
     return next_event
 
+def wrap_text(text, font, max_width):
+    lines = []
+    words = text.split()
+    
+    while words:
+        line = ''
+        while words and font.getsize(line + words[0])[0] <= max_width:
+            line += (words.pop(0) + ' ')
+        lines.append(line)
+
+    return lines
 
 def draw_event_details(draw, event):
     font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 18)
 
     # Prepare event details
-    summary = f"Event: {event['summary']}"
+    summary = event['summary']
     start_time = f"Start: {event['start'].strftime('%Y-%m-%d %H:%M')}"
     end_time = f"End: {event['end'].strftime('%Y-%m-%d %H:%M')}"
-    location = f"Location: {event['location']}"
+    location = event['location']
 
-    # Draw event details on the image buffer
-    draw.text((0, 0), summary, font=font, fill=0)
-    draw.text((0, 20), start_time, font=font, fill=0)
-    draw.text((0, 40), end_time, font=font, fill=0)
-    draw.text((0, 60), location, font=font, fill=0)
+    y_offset = 0
+    for line in summary_lines:
+        draw.text((0, y_offset), line, font=font, fill=0)
+        y_offset += font.getsize(line)[1]
 
-FLIP_DISPLAY = True # Set this to False if you'd like to flip the display upside-down
+    draw.text((0, y_offset), start_time, font=font, fill=0)
+    y_offset += font.getsize(start_time)[1]
+
+    draw.text((0, y_offset), end_time, font=font, fill=0)
+    y_offset += font.getsize(end_time)[1]
+
+    draw.text((0, y_offset), location, font=font, fill=0)
+
+FLIP_DISPLAY = True # Set this to False if you'd like to flip the display rightside-up
 
 def display_next_event(event, full_update=False):
     epd = epd2in13_V3.EPD()
@@ -93,7 +111,7 @@ def display_next_event(event, full_update=False):
     image = Image.new("1", (epd.height, epd.width), 255)
     draw = ImageDraw.Draw(image)
 
-    draw_event_details(draw, event)
+    draw_event_details(draw, event, epd.height)
 
     # Rotate the image if FLIP_DISPLAY is set to True
     if FLIP_DISPLAY:
