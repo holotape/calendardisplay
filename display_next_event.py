@@ -75,9 +75,10 @@ def wrap_text(text, font, max_width):
 
 def draw_event_details(draw, event, max_width):
     font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 18)
+    summary_lines = wrap_text(event['summary'], font, max_width)
 
     # Prepare event details
-    summary = event['summary']
+    # summary = event['summary']
     start_time = f"Start: {event['start'].strftime('%Y-%m-%d %H:%M')}"
     end_time = f"End: {event['end'].strftime('%Y-%m-%d %H:%M')}"
     location = event['location']
