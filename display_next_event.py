@@ -73,7 +73,7 @@ def wrap_text(text, font, max_width):
 
     return lines
 
-def draw_event_details(draw, event):
+def draw_event_details(draw, event, max_width):
     font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 18)
 
     # Prepare event details
