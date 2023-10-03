@@ -29,9 +29,9 @@ def get_next_event(file_path_or_url):
     min_diff = float("inf")
 
     # for debugging purposes only
-    for event in cal.walk("VEVENT"):
-        print(event.get("summary"), event.get("dtstart").dt)
-        break
+ #   for event in cal.walk("VEVENT"):
+ #       print(event.get("summary"), event.get("dtstart").dt)
+ #       break
 
     # logic
     next_event = None
