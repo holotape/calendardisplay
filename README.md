@@ -33,15 +33,21 @@ Install the waveshare_epd module and other dependencies
 
 # Important Bits
 
-Be sure to open up ics_link_sample.txt and follow the instructions to rename it and add the link or path to your calendar.
+1. Adding your personal calendar
 
-If you are using a local Exchange server (as opposed to a Cloud one), this other project may help you retrieve your ICS file directly from the Outlook desktop client.
+    Be sure to open up ics_link_sample.txt and follow the instructions to rename it and add the link or path to your calendar.
 
-https://www.github.com/holotape/calendarexporter
+2. But I don't use Microsoft 365!
 
-If the image is upside-down, look for this line in the display_next_event.py file
+    If you are using a local Exchange server (as opposed to a Cloud one), this other project may help you retrieve your ICS file directly from the Outlook desktop client.
 
-```python
-FLIP_DISPLAY = True # Set this to False if you'd like to flip the display rightside-up
-```
-Set that to False to flip it around.
+    https://www.github.com/holotape/calendarexporter
+
+3. It's Upside-Down!
+
+    If the image is upside-down, look for this line in the display_next_event.py file
+
+    ```python
+    FLIP_DISPLAY = True # Set this to False if you'd like to flip the display rightside-up
+    ```
+    Set that to False to flip it around.
