@@ -74,7 +74,8 @@ def wrap_text(text, font, max_width):
     return lines
 
 def draw_event_details(draw, event, max_width):
-    font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 18)
+    # Put the path to you font of choice below
+    font = ImageFont.truetype("/usr/share/fonts/truetype/apple_garamond/AppleGaramond-Light.ttf", 18)
     summary_lines = wrap_text(event['summary'], font, max_width)
 
     # Prepare event details
