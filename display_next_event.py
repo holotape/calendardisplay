@@ -70,6 +70,10 @@ def get_next_event(file_path_or_url):
                 rrule_params['byweekday'] = days  # for dateutil, we use byweekday
                 del rrule_params['byday']
 
+            # Extract single datetime object for UNTIL if present
+            if 'until' in rrule_params:
+                rrule_params['until'] = rrule_params['until'][0]
+                
             # Create the rrule
             recurrences = list(rrule(dtstart=dtstart_for_rrule, **rrule_params))
 
