@@ -9,6 +9,17 @@ from waveshare_epd import epd2in13_V3
 from PIL import Image, ImageDraw, ImageFont
 from dateutil.rrule import rrule
 from dateutil.parser import parse
+from dateutil.rrule import rrule, YEARLY, MONTHLY, WEEKLY, DAILY, HOURLY, MINUTELY, SECONDLY
+
+RRULE_FREQ_MAP = {
+    'YEARLY': YEARLY,
+    'MONTHLY': MONTHLY,
+    'WEEKLY': WEEKLY,
+    'DAILY': DAILY,
+    'HOURLY': HOURLY,
+    'MINUTELY': MINUTELY,
+    'SECONDLY': SECONDLY
+}
 
 def get_next_event(file_path_or_url):
     local_tz = pytz.timezone("America/Toronto")
@@ -39,15 +50,30 @@ def get_next_event(file_path_or_url):
     for event in cal.walk("VEVENT"):
         event_start_dt = event.get("dtstart").dt
         rrule_val = event.get('rrule')
-    
+
         if rrule_val:
             # Adjust the DTSTART for rrule
             if isinstance(event_start_dt, datetime.datetime):
                 dtstart_for_rrule = event_start_dt.astimezone(utc_tz)
             else:
-                dtstart_for_rrule = event_start_dt
+                dtstart_for_rrule = event_start_dt  # For date objects, no conversion is needed
 
-            recurrences = list(rrule(dtstart=dtstart_for_rrule, **rrule_val))
+            rrule_params = {k.lower(): v for k, v in rrule_val.items()}
+            
+            # Map the FREQ component
+            if 'freq' in rrule_params:
+                rrule_params['freq'] = RRULE_FREQ_MAP[rrule_params['freq'][0]]
+            
+            # Map BYDAY component if present
+            if 'byday' in rrule_params:
+                days = rrule_params['byday']
+                rrule_params['byweekday'] = days  # for dateutil, we use byweekday
+                del rrule_params['byday']
+
+            # Create the rrule
+            recurrences = list(rrule(dtstart=dtstart_for_rrule, **rrule_params))
+
+            # Print for debugging
             print("Recurrences:", recurrences)
 
             for recur in recurrences:
