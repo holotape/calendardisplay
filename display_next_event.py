@@ -100,13 +100,7 @@ def draw_event_details(draw, event, max_width):
 FLIP_DISPLAY = True # Set this to False if you'd like to flip the display rightside-up
 
 def display_next_event(epd, event, full_update=False):
-    
-    """ if full_update:
-        epd.Clear(0xFF)  # full clear for a full update
-    
-    else:
-        epd.init(epd.PART_UPDATE) """
-    
+            
     # create the image buffer
     image = Image.new("1", (epd.height, epd.width), 255)
     draw = ImageDraw.Draw(image)
@@ -127,7 +121,7 @@ def read_ics_link():
     with open("ics_link.txt", "r") as f:
         return f.readline().strip()
 
-MAX_SLEEP_DURATION = 300 # In seconds, 300 is probably a good number
+MAX_SLEEP_DURATION = 600 # In seconds, 300 is 5 mins, 600 is 10, 900 is 15
 
 if __name__ == "__main__":
     epd = epd2in13_V3.EPD()
