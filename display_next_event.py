@@ -7,7 +7,6 @@ import requests
 
 from waveshare_epd import epd2in13_V3
 from PIL import Image, ImageDraw, ImageFont
-from dateutil.rrule import rrulestr
 from dateutil.rrule import rrule
 from dateutil.parser import parse
 
@@ -48,7 +47,7 @@ def get_next_event(file_path_or_url):
             else:
                 dtstart_for_rrule = event_start_dt
 
-            recurrences = list(rrulestr(rrule_data, dtstart=dtstart_for_rrule))
+            recurrences = list(rrule(dtstart=dtstart_for_rrule, **rrule_val))
             print("Recurrences:", recurrences)
 
             for recur in recurrences:
