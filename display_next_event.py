@@ -8,6 +8,7 @@ import requests
 from waveshare_epd import epd2in13_V3
 from PIL import Image, ImageDraw, ImageFont
 from dateutil.rrule import rrulestr
+from dateutil.rrule import rrule
 from dateutil.parser import parse
 
 def get_next_event(file_path_or_url):
@@ -38,30 +39,17 @@ def get_next_event(file_path_or_url):
 
     for event in cal.walk("VEVENT"):
         event_start_dt = event.get("dtstart").dt
-        rrule = event.get('rrule')
+        rrule_val = event.get('rrule')
     
-        if rrule:
+        if rrule_val:
             # Adjust the DTSTART for rrule
             if isinstance(event_start_dt, datetime.datetime):
                 dtstart_for_rrule = event_start_dt.astimezone(utc_tz)
             else:
-                dtstart_for_rrule = event_start_dt  # For date objects, no conversion is needed
-
-            # Adjust the UNTIL value in RRULE if present
-            if 'UNTIL' in rrule:
-                until_date = rrule['UNTIL'][0]
-                if isinstance(until_date, datetime.datetime):
-                    if not hasattr(until_date, 'tzinfo') or until_date.tzinfo is None:
-                        until_date = local_tz.localize(until_date)
-                    rrule['UNTIL'] = [until_date.astimezone(utc_tz).strftime('%Y%m%dT%H%M%SZ')]
-                else:
-                    rrule['UNTIL'] = [until_date.strftime('%Y%m%d')]
-            
-            # Convert the adjusted RRULE dictionary back to an RRULE string
-            rrule_data = ";".join(f"{key}={','.join(map(str, val))}" for key, val in rrule.items())
-            print("RRULE Data:", rrule_data)
+                dtstart_for_rrule = event_start_dt
 
             recurrences = list(rrulestr(rrule_data, dtstart=dtstart_for_rrule))
+            print("Recurrences:", recurrences)
 
             for recur in recurrences:
                 # Modify logic to check if recurring event is the next event
