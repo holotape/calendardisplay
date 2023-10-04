@@ -46,14 +46,14 @@ def get_next_event(file_path_or_url):
             # Ensure UNTIL is in UTC if DTSTART is timezone-aware
             if 'UNTIL' in rrule_data:
                 until_date = rrule['UNTIL'][0]
-                if isinstance(until_date, str):  # Check if it's a string and parse it
-                    until_date = parse(until_date)
-                if not until_date.tzinfo:
-                    until_date = local_tz.localize(until_date)
-                until_date_utc = until_date.astimezone(utc_tz)
-                rrule_data = rrule_data.replace(str(rrule['UNTIL'][0]), until_date_utc.strftime('%Y%m%dT%H%M%SZ'))
+                if isinstance(event_start_dt, datetime.datetime):
+                    dtstart_for_rrule = event_start_dt.astimezone(utc_tz)
+                else:
+                    dtstart_for_rrule = event_start_dt
 
-            recurrences = list(rrulestr(rrule_data, dtstart=event_start_dt.astimezone(utc_tz)))
+
+            recurrences = list(rrulestr(rrule_data, dtstart=dtstart_for_rrule))
+
             for recur in recurrences:
                 # Modify logic to check if recurring event is the next event
                 if recur > now:
