@@ -38,12 +38,20 @@ def get_next_event(file_path_or_url):
     for event in cal.walk("VEVENT"):
         event_start_dt = event.get("dtstart").dt
         rrule = event.get('rrule')
-        
+
         if rrule:
             rrule_data = rrule.to_ical().decode("utf-8")
+
+            # Ensure UNTIL is in UTC if DTSTART is timezone-aware
+            if 'UNTIL' in rrule_data:
+                until_date = parse(rrule['UNTIL'][0])
+                if not until_date.tzinfo:
+                    until_date = local_tz.localize(until_date)
+                rrule_data = rrule_data.replace(str(rrule['UNTIL'][0]), until_date.strftime('%Y%m%dT%H%M%SZ'))
+
             recurrences = list(rrulestr(rrule_data, dtstart=event_start_dt.astimezone(local_tz).replace(tzinfo=None)))
             for recur in recurrences:
-                # check if recurring event is the next event
+                # Modify logic to check if recurring event is the next event
                 if recur > now:
                     diff = (recur - now).total_seconds()
                     if 0 <= diff < min_diff:
