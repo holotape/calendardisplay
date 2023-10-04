@@ -44,11 +44,9 @@ def get_next_event(file_path_or_url):
         # Adjust the DTSTART for rrule
             if isinstance(event_start_dt, datetime.datetime):
                 dtstart_for_rrule = event_start_dt.astimezone(utc_tz)
-                print("RRULE Data:", rrule_data)
             else:
                 dtstart_for_rrule = event_start_dt
-                print("RRULE Data:", rrule_data)
-                
+
             # Adjust the UNTIL value in RRULE if present
             if 'UNTIL' in rrule:
                 until_date = rrule['UNTIL'][0]
@@ -58,7 +56,7 @@ def get_next_event(file_path_or_url):
             
             # Convert the adjusted RRULE dictionary back to an RRULE string
             rrule_data = ";".join(f"{key}={','.join(map(str, val))}" for key, val in rrule.items())
-            
+            print("RRULE Data:", rrule_data)
             #recurrences = list(rrulestr(rrule_data, dtstart=dtstart_for_rrule))
 
             for recur in recurrences:
