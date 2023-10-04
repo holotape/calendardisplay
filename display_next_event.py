@@ -99,7 +99,7 @@ def draw_event_details(draw, event, max_width):
 
 FLIP_DISPLAY = True # Set this to False if you'd like to flip the display rightside-up
 
-def display_next_event(event, full_update=False):
+def display_next_event(epd, event, full_update=perform_full_update):
     epd = epd2in13_V3.EPD()
     epd.init()
 
