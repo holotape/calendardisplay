@@ -101,11 +101,11 @@ FLIP_DISPLAY = True # Set this to False if you'd like to flip the display rights
 
 def display_next_event(epd, event, full_update=False):
     
-    if full_update:
+    """ if full_update:
         epd.Clear(0xFF)  # full clear for a full update
     
     else:
-        epd.init(epd.PART_UPDATE)
+        epd.init(epd.PART_UPDATE) """
     
     # create the image buffer
     image = Image.new("1", (epd.height, epd.width), 255)
