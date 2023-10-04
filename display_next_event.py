@@ -52,12 +52,13 @@ def get_next_event(file_path_or_url):
                 until_date = rrule['UNTIL'][0]
                 if not hasattr(until_date, 'tzinfo') or until_date.tzinfo is None:
                     until_date = local_tz.localize(until_date)
-                rrule['UNTIL'] = [until_date.astimezone(utc_tz)]
+                rrule['UNTIL'] = [until_date.astimezone(utc_tz).strftime('%Y%m%dT%H%M%SZ')]
+
             
             # Convert the adjusted RRULE dictionary back to an RRULE string
             rrule_data = ";".join(f"{key}={','.join(map(str, val))}" for key, val in rrule.items())
             print("RRULE Data:", rrule_data)
-            #recurrences = list(rrulestr(rrule_data, dtstart=dtstart_for_rrule))
+            recurrences = list(rrulestr(rrule_data, dtstart=dtstart_for_rrule))
 
             for recur in recurrences:
                 # Modify logic to check if recurring event is the next event
