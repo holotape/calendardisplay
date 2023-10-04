@@ -12,6 +12,7 @@ from dateutil.parser import parse
 
 def get_next_event(file_path_or_url):
     local_tz = pytz.timezone("America/Toronto")
+    utc_tz = pytz.timezone("UTC")
     now = datetime.datetime.now(local_tz).replace(tzinfo=None)
     
     # Check if the input is a URL or a local file path
@@ -49,9 +50,10 @@ def get_next_event(file_path_or_url):
                     until_date = parse(until_date)
                 if not until_date.tzinfo:
                     until_date = local_tz.localize(until_date)
-                rrule_data = rrule_data.replace(str(rrule['UNTIL'][0]), until_date.strftime('%Y%m%dT%H%M%SZ'))
+                until_date_utc = until_date.astimezone(utc_tz)
+                rrule_data = rrule_data.replace(str(rrule['UNTIL'][0]), until_date_utc.strftime('%Y%m%dT%H%M%SZ'))
 
-            recurrences = list(rrulestr(rrule_data, dtstart=event_start_dt.astimezone(local_tz).replace(tzinfo=None)))
+            recurrences = list(rrulestr(rrule_data, dtstart=event_start_dt.astimezone(utc_tz)))
             for recur in recurrences:
                 # Modify logic to check if recurring event is the next event
                 if recur > now:
@@ -64,25 +66,6 @@ def get_next_event(file_path_or_url):
                             "end": recur + (event.get("dtend").dt.replace(tzinfo=None) - event_start_dt.replace(tzinfo=None)),
                             "location": event.get("location"),
                         }
-        else:
-            if isinstance(event_start_dt, datetime.datetime):
-                event_start = event_start_dt.astimezone(local_tz).replace(tzinfo=None)
-            else:  # it's a date, not a datetime
-                event_start = event_start_dt
-            
-            if isinstance(event_start, datetime.datetime):  # handle both datetime and date types
-                diff = (event_start - now).total_seconds()
-            else:
-                diff = float('inf')  # Treat all-day events like they're infinitely far in the future
-
-            if 0 <= diff < min_diff:
-                min_diff = diff
-                next_event = {
-                    "summary": event.get("summary"),
-                    "start": event_start,
-                    "end": event.get("dtend").dt.replace(tzinfo=None),
-                    "location": event.get("location"),
-                }
 
     return next_event
 
