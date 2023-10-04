@@ -100,9 +100,7 @@ def draw_event_details(draw, event, max_width):
 FLIP_DISPLAY = True # Set this to False if you'd like to flip the display rightside-up
 
 def display_next_event(epd, event, full_update=False):
-    epd = epd2in13_V3.EPD()
-    epd.init()
-
+    
     if full_update:
         epd.Clear(0xFF)  # full clear for a full update
     
@@ -132,6 +130,9 @@ def read_ics_link():
 MAX_SLEEP_DURATION = 300 # In seconds, 300 is probably a good number
 
 if __name__ == "__main__":
+    epd = epd2in13_V3.EPD()
+    epd.init()
+    
     # !!!!! Be sure to open up ics_link_sample.txt and follow the instructions
     file_path = read_ics_link()
 
@@ -153,7 +154,7 @@ if __name__ == "__main__":
                 perform_full_update = True
                 previous_event = next_event
 
-            display_next_event(next_event, full_update=perform_full_update)
+            display_next_event(epd, next_event, full_update=perform_full_update)
 
             # If the next event has started and we're less than 10 minutes into it, 
             # calculate sleep duration to be 10 minutes after the start of the event
