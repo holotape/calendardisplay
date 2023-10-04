@@ -13,7 +13,7 @@ from dateutil.parser import parse
 def get_next_event(file_path_or_url):
     local_tz = pytz.timezone("America/Toronto")
     utc_tz = pytz.timezone("UTC")
-    now = datetime.datetime.now(local_tz).replace(tzinfo=None)
+    now = datetime.datetime.now(local_tz) # .replace(tzinfo=None)
     
     # Check if the input is a URL or a local file path
     if file_path_or_url.startswith("http://") or file_path_or_url.startswith("https://"):
