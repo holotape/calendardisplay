@@ -7,7 +7,8 @@ import requests
 
 from waveshare_epd import epd2in13_V3
 from PIL import Image, ImageDraw, ImageFont
-
+from dateutil.rrule import rrulestr
+from dateutil.parser import parse
 
 def get_next_event(file_path_or_url):
     local_tz = pytz.timezone("America/Toronto")
@@ -25,9 +26,6 @@ def get_next_event(file_path_or_url):
 
     cal = Calendar.from_ical(cal_content)
 
-    next_event = None
-    min_diff = float("inf")
-
     # for debugging purposes only
  #   for event in cal.walk("VEVENT"):
  #       print(event.get("summary"), event.get("dtstart").dt)
@@ -39,25 +37,42 @@ def get_next_event(file_path_or_url):
 
     for event in cal.walk("VEVENT"):
         event_start_dt = event.get("dtstart").dt
+        rrule = event.get('rrule')
         
-        if isinstance(event_start_dt, datetime.datetime):
-            event_start = event_start_dt.astimezone(local_tz).replace(tzinfo=None)
-        else:  # it's a date, not a datetime
-            event_start = event_start_dt
-        
-        if isinstance(event_start, datetime.datetime):  # handle both datetime and date types
-            diff = (event_start - now).total_seconds()
+        if rrule:
+            rrule_data = rrule.to_ical().decode("utf-8")
+            recurrences = list(rrulestr(rrule_data, dtstart=event_start_dt.astimezone(local_tz).replace(tzinfo=None)))
+            for recur in recurrences:
+                # check if recurring event is the next event
+                if recur > now:
+                    diff = (recur - now).total_seconds()
+                    if 0 <= diff < min_diff:
+                        min_diff = diff
+                        next_event = {
+                            "summary": event.get("summary"),
+                            "start": recur,
+                            "end": recur + (event.get("dtend").dt.replace(tzinfo=None) - event_start_dt.replace(tzinfo=None)),
+                            "location": event.get("location"),
+                        }
         else:
-            diff = float('inf')  # Treat all-day events like they're infinitely far in the future
+            if isinstance(event_start_dt, datetime.datetime):
+                event_start = event_start_dt.astimezone(local_tz).replace(tzinfo=None)
+            else:  # it's a date, not a datetime
+                event_start = event_start_dt
+            
+            if isinstance(event_start, datetime.datetime):  # handle both datetime and date types
+                diff = (event_start - now).total_seconds()
+            else:
+                diff = float('inf')  # Treat all-day events like they're infinitely far in the future
 
-        if 0 <= diff < min_diff:
-            min_diff = diff
-            next_event = {
-                "summary": event.get("summary"),
-                "start": event_start,
-                "end": event.get("dtend").dt.replace(tzinfo=None),
-                "location": event.get("location"),
-            }
+            if 0 <= diff < min_diff:
+                min_diff = diff
+                next_event = {
+                    "summary": event.get("summary"),
+                    "start": event_start,
+                    "end": event.get("dtend").dt.replace(tzinfo=None),
+                    "location": event.get("location"),
+                }
 
     return next_event
 
@@ -121,7 +136,7 @@ def read_ics_link():
     with open("ics_link.txt", "r") as f:
         return f.readline().strip()
 
-MAX_SLEEP_DURATION = 600 # In seconds, 300 is 5 mins, 600 is 10, 900 is 15
+MAX_SLEEP_DURATION = 60 # In seconds, 300 is 5 mins, 600 is 10, 900 is 15
 
 if __name__ == "__main__":
     epd = epd2in13_V3.EPD()
