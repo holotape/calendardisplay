@@ -44,7 +44,9 @@ def get_next_event(file_path_or_url):
 
             # Ensure UNTIL is in UTC if DTSTART is timezone-aware
             if 'UNTIL' in rrule_data:
-                until_date = parse(rrule['UNTIL'][0])
+                until_date = rrule['UNTIL'][0]
+                if isinstance(until_date, str):  # Check if it's a string and parse it
+                    until_date = parse(until_date)
                 if not until_date.tzinfo:
                     until_date = local_tz.localize(until_date)
                 rrule_data = rrule_data.replace(str(rrule['UNTIL'][0]), until_date.strftime('%Y%m%dT%H%M%SZ'))
