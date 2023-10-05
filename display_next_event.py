@@ -1,3 +1,4 @@
+from dateutil.rrule import MO, TU, WE, TH, FR, SA, SU
 import datetime
 import time
 import os
@@ -10,7 +11,6 @@ from PIL import Image, ImageDraw, ImageFont
 from dateutil.rrule import rrule
 from dateutil.parser import parse
 from dateutil.rrule import rrule, YEARLY, MONTHLY, WEEKLY, DAILY, HOURLY, MINUTELY, SECONDLY
-from dateutil.rrule import MO, TU, WE, TH, FR, SA, SU
 
 RRULE_FREQ_MAP = {
     'YEARLY': YEARLY,
