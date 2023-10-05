@@ -32,6 +32,50 @@ WEEKDAY_MAP = {
     "SU": SU
 }
 
+WEEKDAY_ORDINAL_MAP = {
+    "1MO": MO(1),
+    "2MO": MO(2),
+    "3MO": MO(3),
+    "4MO": MO(4),
+    "-1MO": MO(-1),
+
+    "1TU": TU(1),
+    "2TU": TU(2),
+    "3TU": TU(3),
+    "4TU": TU(4),
+    "-1TU": TU(-1),
+
+    "1WE": WE(1),
+    "2WE": WE(2),
+    "3WE": WE(3),
+    "4WE": WE(4),
+    "-1WE": WE(-1),
+
+    "1TH": TH(1),
+    "2TH": TH(2),
+    "3TH": TH(3),
+    "4TH": TH(4),
+    "-1TH": TH(-1),
+
+    "1FR": FR(1),
+    "2FR": FR(2),
+    "3FR": FR(3),
+    "4FR": FR(4),
+    "-1FR": FR(-1),
+
+    "1SA": SA(1),
+    "2SA": SA(2),
+    "3SA": SA(3),
+    "4SA": SA(4),
+    "-1SA": SA(-1),
+
+    "1SU": SU(1),
+    "2SU": SU(2),
+    "3SU": SU(3),
+    "4SU": SU(4),
+    "-1SU": SU(-1),
+}
+
 def get_next_event(file_path_or_url):
     local_tz = pytz.timezone("America/Toronto")
     utc_tz = pytz.timezone("UTC")
@@ -78,7 +122,7 @@ def get_next_event(file_path_or_url):
             # Map BYDAY component if present
             if 'byday' in rrule_params:
                 days = rrule_params['byday']
-                rrule_params['byweekday'] = days  # for dateutil, we use byweekday
+                rrule_params['byweekday'] = [WEEKDAY_ORDINAL_MAP[day] if day in WEEKDAY_ORDINAL_MAP else WEEKDAY_MAP[day] for day in days]
                 del rrule_params['byday']
 
             # Extract single datetime object for UNTIL if present
