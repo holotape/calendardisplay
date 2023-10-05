@@ -123,8 +123,8 @@ def get_next_event(file_path):
             
             # Map BYDAY component if present
             if 'byday' in rrule_params:
-                if isinstance(days, str):
-                    days = [days]
+                days = rrule_params['byday']
+                days = [days] if isinstance(days, str) else days
                 rrule_params['byweekday'] = [WEEKDAY_ORDINAL_MAP[day] if day in WEEKDAY_ORDINAL_MAP else WEEKDAY_MAP[day] for day in days]
                 del rrule_params['byday']
 
