@@ -96,9 +96,9 @@ def get_next_event(file_path):
     cal = Calendar.from_ical(cal_content)
 
     # for debugging purposes only
- #   for event in cal.walk("VEVENT"):
- #       print(event.get("summary"), event.get("dtstart").dt)
- #       break
+    for event in cal.walk("VEVENT"):
+        print(event.get("summary"), event.get("dtstart").dt)
+        break
 
     # logic
     next_event = None
