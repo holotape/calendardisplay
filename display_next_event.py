@@ -76,12 +76,12 @@ WEEKDAY_ORDINAL_MAP = {
     "-1SU": SU(-1),
 }
 
-def get_next_event(file_path, dtstart):
+def get_next_event(file_path):
     local_tz = pytz.timezone("America/Toronto")
     utc_tz = pytz.timezone("UTC")
     now = datetime.datetime.now(local_tz) # .replace(tzinfo=None)
     #dtstart_for_rrule = datetime.datetime.fromtimestamp(dtstart)
-    recurrences = list(rrule(dtstart=dtstart_for_rrule, **rrule_params))
+    #recurrences = list(rrule(dtstart=dtstart_for_rrule, **rrule_params))
 
     # Check if the input is a URL or a local file path
     if file_path.startswith("http://") or file_path.startswith("https://"):
