@@ -10,6 +10,7 @@ from PIL import Image, ImageDraw, ImageFont
 from dateutil.rrule import rrule
 from dateutil.parser import parse
 from dateutil.rrule import rrule, YEARLY, MONTHLY, WEEKLY, DAILY, HOURLY, MINUTELY, SECONDLY
+from dateutil.rrule import MO, TU, WE, TH, FR, SA, SU
 
 RRULE_FREQ_MAP = {
     'YEARLY': YEARLY,
@@ -19,6 +20,16 @@ RRULE_FREQ_MAP = {
     'HOURLY': HOURLY,
     'MINUTELY': MINUTELY,
     'SECONDLY': SECONDLY
+}
+
+WEEKDAY_MAP = {
+    "MO": MO,
+    "TU": TU,
+    "WE": WE,
+    "TH": TH,
+    "FR": FR,
+    "SA": SA,
+    "SU": SU
 }
 
 def get_next_event(file_path_or_url):
@@ -73,6 +84,11 @@ def get_next_event(file_path_or_url):
             # Extract single datetime object for UNTIL if present
             if 'until' in rrule_params:
                 rrule_params['until'] = rrule_params['until'][0]
+
+            # Handle WKST if present
+            if 'wkst' in rrule_params:
+                wkst_str = rrule_params['wkst'][0]  # Get the string representation
+                rrule_params['wkst'] = WEEKDAY_MAP[wkst_str]  # Convert string to its respective weekday object
                 
             # Create the rrule
             recurrences = list(rrule(dtstart=dtstart_for_rrule, **rrule_params))
