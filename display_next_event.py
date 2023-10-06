@@ -122,7 +122,7 @@ def get_next_event(file_path_or_url):
             # Map BYDAY component if present
             if 'byday' in rrule_params:
                 days = rrule_params['byday']
-                rrule_params['byweekday'] = [WEEKDAY_ORDINAL_MAP[day] if day in WEEKDAY_ORDINAL_MAP else WEEKDAY_MAP[day] for day in days]
+                rrule_params['byweekday'] = WEEKDAY_ORDINAL_MAP[days[0]] if days[0] in WEEKDAY_ORDINAL_MAP else WEEKDAY_MAP[days[0]]
                 del rrule_params['byday']
 
             # Extract single datetime object for UNTIL if present
