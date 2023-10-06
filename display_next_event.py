@@ -137,7 +137,10 @@ def get_next_event(file_path):
             # Handle WKST if present
             if 'wkst' in rrule_params:
                 wkst_str = rrule_params['wkst'][0]  # Get the string representation
-                rrule_params['wkst'] = WEEKDAY_MAP[wkst_str]  # Convert string to its respective weekday object
+                if wkst_str in WEEKDAY_MAP:
+                    rrule_params['wkst'] = WEEKDAY_MAP[wkst_str]
+                else:
+                    rrule_params['wkst'] = int(wkst_str)
                 
             # Create the rrule
             recurrences = list(rrule(dtstart=dtstart_for_rrule, **rrule_params))
