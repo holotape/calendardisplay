@@ -126,6 +126,8 @@ def get_next_event(file_path):
                 days = rrule_params['byday']
                 if isinstance(rrule_params['byweekday'], list):
                     rrule_params['byweekday'] = rrule_params['byweekday'][0]
+                if isinstance(rrule_params['wkst'], list):
+                    rrule_params['wkst'] = rrule_params['wkst'][0]
                 del rrule_params['byday']
 
             # Extract single datetime object for UNTIL if present
