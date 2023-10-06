@@ -116,10 +116,10 @@ def get_next_event(file_path):
                 dtstart_for_rrule = event_start_dt  # For date objects, no conversion is needed
 
             rrule_params = {k.lower(): v for k, v in rrule_val.items()}
-            
+
             if 'freq' in rrule_params:
                 rrule_params['freq'] = RRULE_FREQ_MAP[rrule_params['freq'][0]]
-            
+
             if 'byweekday' not in rrule_params:
                 rrule_params['byweekday'] = None
             if 'byday' in rrule_params:
@@ -141,7 +141,7 @@ def get_next_event(file_path):
                     rrule_params['wkst'] = WEEKDAY_MAP[wkst_str]
                 else:
                     rrule_params['wkst'] = int(ord(wkst_str.lower()) - 97)
-                
+
             # Create the rrule
             recurrences = list(rrule(dtstart=dtstart_for_rrule, **rrule_params))
 
