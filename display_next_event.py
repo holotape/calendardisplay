@@ -76,27 +76,29 @@ WEEKDAY_ORDINAL_MAP = {
     "-1SU": SU(-1),
 }
 
-def get_next_event(file_path_or_url):
+def get_next_event(file_path):
     local_tz = pytz.timezone("America/Toronto")
     utc_tz = pytz.timezone("UTC")
     now = datetime.datetime.now(local_tz) # .replace(tzinfo=None)
-    
+    #dtstart_for_rrule = datetime.datetime.fromtimestamp(dtstart)
+    #recurrences = list(rrule(dtstart=dtstart_for_rrule, **rrule_params))
+
     # Check if the input is a URL or a local file path
-    if file_path_or_url.startswith("http://") or file_path_or_url.startswith("https://"):
+    if file_path.startswith("http://") or file_path.startswith("https://"):
         headers = {"Cache-Control": "no-cache"} # Don't cache the ICS file
-        response = requests.get(file_path_or_url)
+        response = requests.get(file_path)
         response.raise_for_status()  # raise an exception if there was an error fetching the URL
         cal_content = response.content
     else:
-        with open(file_path_or_url, "rb") as f:
+        with open(file_path, "rb") as f:
             cal_content = f.read()
 
     cal = Calendar.from_ical(cal_content)
 
     # for debugging purposes only
- #   for event in cal.walk("VEVENT"):
- #       print(event.get("summary"), event.get("dtstart").dt)
- #       break
+    for event in cal.walk("VEVENT"):
+        print(event.get("summary"), event.get("dtstart").dt)
+        break
 
     # logic
     next_event = None
