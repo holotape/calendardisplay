@@ -117,11 +117,11 @@ def get_next_event(file_path):
 
             rrule_params = {k.lower(): v for k, v in rrule_val.items()}
             
-            # Map the FREQ component
             if 'freq' in rrule_params:
                 rrule_params['freq'] = RRULE_FREQ_MAP[rrule_params['freq'][0]]
             
-            # Map BYDAY component if present
+            if 'byweekday' not in rrule_params:
+                rrule_params['byweekday'] = None
             if 'byday' in rrule_params:
                 days = rrule_params['byday']
                 if isinstance(rrule_params['byweekday'], list):
