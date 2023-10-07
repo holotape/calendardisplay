@@ -184,7 +184,7 @@ def draw_event_details(draw, event, max_width):
     # summary = event['summary']
     start_time = f"Start: {event['start'].strftime('%Y-%m-%d %H:%M')}"
     end_time = f"End: {event['end'].strftime('%Y-%m-%d %H:%M')}"
-    location = event['location']
+    location = event['location'] or ''
 
     y_offset = 0
     for line in summary_lines:
